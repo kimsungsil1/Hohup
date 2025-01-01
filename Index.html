@@ -3,31 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relaxation and Sleep Aid</title>
+    <title>4-7-8 Breathing Exercise</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
             text-align: center;
+            background-color: #f0f8ff;
             padding: 20px;
         }
         h1 {
             color: #2c3e50;
         }
-        .section {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
         button {
             padding: 10px 20px;
-            margin: 10px;
+            margin: 20px;
             background-color: #3498db;
-            color: #fff;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -35,79 +26,59 @@
         button:hover {
             background-color: #2980b9;
         }
+        #status {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #34495e;
+        }
     </style>
 </head>
 <body>
-    <h1>Relaxation and Sleep Aid</h1>
-
-    <!-- Step 1 -->
-    <div class="section" id="step1">
-        <h2>1. Breathing Exercise</h2>
-        <p>Follow the prompts to inhale, hold your breath, and exhale. Sounds or vibrations will guide you.</p>
-        <button onclick="startBreathing()">Start Breathing Exercise</button>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="section" id="step2">
-        <h2>2. Muscle Relaxation</h2>
-        <p>Relax each part of your body sequentially, starting from your toes to your head.</p>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="section" id="step3">
-        <h2>3. White Noise</h2>
-        <p>Play soothing natural sounds to calm your mind.</p>
-        <audio controls>
-            <source src="white_noise.mp3" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="section" id="step4">
-        <h2>4. Meditation</h2>
-        <p>Repeat the phrase "I am completely relaxed" in your mind while visualizing a serene lake.</p>
-    </div>
-
-    <!-- Step 5 -->
-    <div class="section" id="step5">
-        <h2>5. Sleep Story</h2>
-        <p>Imagine a peaceful story or request a custom bedtime story.</p>
-    </div>
+    <h1>4-7-8 Breathing Exercise</h1>
+    <button onclick="startBreathing()">Start Exercise</button>
+    <p id="status">Click "Start Exercise" to begin.</p>
 
     <script>
         function startBreathing() {
-            const inhaleTime = 4000; // 4 seconds
-            const holdTime = 7000; // 7 seconds
-            const exhaleTime = 8000; // 8 seconds
+            const status = document.getElementById("status");
 
-            alert("Breathing exercise started. Follow the beeps and vibrations.");
+            function playBeep() {
+                const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
+                audio.play();
+            }
 
-            // Inhale phase
+            function vibrate() {
+                if (navigator.vibrate) {
+                    navigator.vibrate(500); // Vibrate for 500ms
+                }
+            }
+
+            let time = 0;
+
+            // Inhale for 4 seconds
+            status.textContent = "Inhale for 4 seconds...";
+            playBeep();
+            vibrate();
+
             setTimeout(() => {
+                // Hold for 7 seconds
+                status.textContent = "Hold your breath for 7 seconds...";
                 playBeep();
-                navigator.vibrate([500]);
-                console.log("Inhale for 4 seconds...");
-            }, 0);
+                vibrate();
+            }, 4000);
 
-            // Hold breath phase
             setTimeout(() => {
+                // Exhale for 8 seconds
+                status.textContent = "Exhale for 8 seconds...";
                 playBeep();
-                navigator.vibrate([500]);
-                console.log("Hold your breath for 7 seconds...");
-            }, inhaleTime);
+                vibrate();
+            }, 11000);
 
-            // Exhale phase
             setTimeout(() => {
-                playBeep();
-                navigator.vibrate([500]);
-                console.log("Exhale for 8 seconds...");
-            }, inhaleTime + holdTime);
-        }
-
-        function playBeep() {
-            const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
-            audio.play();
+                // Restart the cycle
+                status.textContent = "Cycle complete. Restarting...";
+                setTimeout(() => startBreathing(), 8000); // Loop the breathing
+            }, 19000);
         }
     </script>
 </body>
