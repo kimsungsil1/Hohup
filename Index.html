@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relaxation and Sleep Aid</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relaxation and Sleep Aid</h1>
+
+    <!-- Step 1 -->
+    <div class="section" id="step1">
+        <h2>1. Breathing Exercise</h2>
+        <p>Follow the prompts to inhale, hold your breath, and exhale. Sounds or vibrations will guide you.</p>
+        <button onclick="startBreathing()">Start Breathing Exercise</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="section" id="step2">
+        <h2>2. Muscle Relaxation</h2>
+        <p>Relax each part of your body sequentially, starting from your toes to your head.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="section" id="step3">
+        <h2>3. White Noise</h2>
+        <p>Play soothing natural sounds to calm your mind.</p>
+        <audio controls>
+            <source src="white_noise.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="section" id="step4">
+        <h2>4. Meditation</h2>
+        <p>Repeat the phrase "I am completely relaxed" in your mind while visualizing a serene lake.</p>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="section" id="step5">
+        <h2>5. Sleep Story</h2>
+        <p>Imagine a peaceful story or request a custom bedtime story.</p>
+    </div>
+
+    <script>
+        function startBreathing() {
+            const inhaleTime = 4000; // 4 seconds
+            const holdTime = 7000; // 7 seconds
+            const exhaleTime = 8000; // 8 seconds
+
+            alert("Breathing exercise started. Follow the beeps and vibrations.");
+
+            // Inhale phase
+            setTimeout(() => {
+                playBeep();
+                navigator.vibrate([500]);
+                console.log("Inhale for 4 seconds...");
+            }, 0);
+
+            // Hold breath phase
+            setTimeout(() => {
+                playBeep();
+                navigator.vibrate([500]);
+                console.log("Hold your breath for 7 seconds...");
+            }, inhaleTime);
+
+            // Exhale phase
+            setTimeout(() => {
+                playBeep();
+                navigator.vibrate([500]);
+                console.log("Exhale for 8 seconds...");
+            }, inhaleTime + holdTime);
+        }
+
+        function playBeep() {
+            const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
+            audio.play();
+        }
+    </script>
+</body>
+</html>
