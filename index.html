@@ -4,46 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>4-7-8 Breathing (Sound & Vibration)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 50px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #ffffff;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #msg {
+      margin-top: 40px;
+      font-size: 18px;
+      color: #2c3e50;
+      min-height: 50px;
+    }
+  </style>
 </head>
 <body>
+  <h1>4-7-8 호흡 안내</h1>
   <button id="startBtn">시작하기</button>
+  <div id="msg">버튼을 누르면 호흡 안내가 시작됩니다.</div>
 
   <script>
-    const INHALE_DURATION = 4; 
-    const HOLD_DURATION   = 7; 
-    const EXHALE_DURATION = 8; 
+    // ---- 타이밍 설정 (초 단위) ----
+    const INHALE_DURATION = 4; // 들이마시기 4초
+    const HOLD_DURATION   = 7; // 멈추기 7초
+    const EXHALE_DURATION = 8; // 내쉬기 8초
 
-    document.getElementById("startBtn").addEventListener("click", startBreathing);
+    // ---- 버튼, 메세지 DOM 가져오기 ----
+    const startBtn = document.getElementById("startBtn");
+    const msg      = document.getElementById("msg");
 
+    // ---- 버튼 클릭 시 이벤트 등록 ----
+    startBtn.addEventListener("click", startBreathing);
+
+    // ---- 호흡 안내 함수 ----
     function startBreathing() {
-      // 버튼 누르면 재시작되도록 방지
-      document.getElementById("startBtn").disabled = true;
+      // 버튼 여러 번 누르지 못하게 비활성화
+      startBtn.disabled = true;
+      msg.textContent = "호흡 안내가 시작되었습니다. 눈을 감고 소리와 진동에만 집중해 보세요.";
+      
+      console.log("===== 새 사이클 시작 (4-7-8) =====");
+      
+      // 1) 들이마시기 신호: Beep + 4초
+      console.log("[들이마시기] Beep 소리 재생 후 4초 진행");
+      playBeep(); // 소리 재생
 
-      // 1단계: 소리 → 들이마시기
-      playBeep();  
+      // 2) 4초 후 -> 숨 멈추기 신호: 7초 진동
       setTimeout(() => {
-        // 2단계: 진동 → 숨 멈추기
+        console.log("[숨 멈추기] 7초 진동 시작");
         startVibrate(HOLD_DURATION * 1000);
+
+        // 3) 7초 후 -> 내쉬기 신호: Beep 재생 + 8초
         setTimeout(() => {
-          // 3단계: 진동 끝 → 소리 → 내쉬기
+          console.log("[내쉬기] 7초 진동 끝, Beep 소리 재생 후 8초 진행");
           playBeep();
+
+          // 4) 8초 후 -> 다시 startBreathing() 재귀 호출로 반복
           setTimeout(() => {
-            // 다음 사이클
+            console.log("사이클 1회 종료 → 다음 사이클 반복");
             startBreathing();
           }, EXHALE_DURATION * 1000);
+
         }, HOLD_DURATION * 1000);
+
       }, INHALE_DURATION * 1000);
     }
 
+    // ---- 소리 재생 함수 ----
     function playBeep() {
-      // 다른 Beep 사운드 URL
+      // 버튼 클릭 후 실행되므로 대개 브라우저 자동재생 규칙에 걸리지 않음
+      // 필요에 따라 다른 파일 URL 사용 가능
       const audio = new Audio("https://www.soundjay.com/button/sounds/beep-09.wav");
-      audio.play().catch(err => console.log("Audio play error:", err));
+      audio.play().then(() => {
+        console.log("Beep sound played successfully.");
+      }).catch(err => {
+        console.error("Audio play error:", err);
+      });
     }
 
+    // ---- 진동 함수 ----
     function startVibrate(duration) {
       if (navigator.vibrate) {
         navigator.vibrate(duration);
+        console.log(`진동 중... (약 ${duration}ms)`);
+      } else {
+        console.log("navigator.vibrate() 미지원 환경입니다.");
       }
     }
   </script>
