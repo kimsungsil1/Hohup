@@ -1,85 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4-7-8 Breathing Exercise</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
-            padding: 20px;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        #status {
-            font-size: 24px;
-            margin-top: 20px;
-            color: #34495e;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>4-7-8 Breathing Exercise</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 50px;
+    }
+    #container {
+      display: inline-block;
+      text-align: center;
+      background: #ffffffdd;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      padding: 12px 24px;
+      margin: 20px 0;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #phase {
+      font-size: 24px;
+      color: #2c3e50;
+      margin: 15px 0;
+    }
+    #countdown {
+      font-size: 48px;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+    #hint {
+      font-size: 18px;
+      color: #34495e;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-    <h1>4-7-8 Breathing Exercise</h1>
-    <button onclick="startBreathing()">Start Exercise</button>
-    <p id="status">Click "Start Exercise" to begin.</p>
+  <h1>4-7-8 호흡안내</h1>
+  <div id="container">
+    <button id="startBtn">시작하기</button>
+    <div id="phase">준비 중</div>
+    <div id="countdown">0</div>
+    <div id="hint">버튼을 누르면 호흡 안내를 시작합니다.</div>
+  </div>
 
-    <script>
-        function startBreathing() {
-            const status = document.getElementById("status");
+  <script>
+    // 4-7-8 호흡 단계 설정
+    const phases = [
+      { name: "들이마시기", duration: 4, hint: "코로 숨을 천천히 들이마셔 보세요." },
+      { name: "멈추기", duration: 7, hint: "입과 코를 닫고 호흡을 잠시 멈춰 보세요." },
+      { name: "내쉬기", duration: 8, hint: "천천히 입으로 숨을 길게 내쉬어 보세요." },
+    ];
 
-            function playBeep() {
-                const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
-                audio.play();
-            }
+    let currentPhaseIndex = 0;   // 현재 단계
+    let timeLeft = 0;            // 현재 단계에 남은 시간(초)
+    let intervalId = null;       // setInterval을 저장할 변수
 
-            function vibrate() {
-                if (navigator.vibrate) {
-                    navigator.vibrate(500); // Vibrate for 500ms
-                }
-            }
+    // 버튼 클릭 시 호흡 시작
+    document.getElementById("startBtn").addEventListener("click", startBreathing);
 
-            let time = 0;
+    function startBreathing() {
+      // 이미 실행 중이면 초기화
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
 
-            // Inhale for 4 seconds
-            status.textContent = "Inhale for 4 seconds...";
-            playBeep();
-            vibrate();
+      // 단계 초기화 후 시작
+      currentPhaseIndex = 0;
+      timeLeft = phases[currentPhaseIndex].duration;
 
-            setTimeout(() => {
-                // Hold for 7 seconds
-                status.textContent = "Hold your breath for 7 seconds...";
-                playBeep();
-                vibrate();
-            }, 4000);
+      updateUI();
+      beep();
+      vibrate();
 
-            setTimeout(() => {
-                // Exhale for 8 seconds
-                status.textContent = "Exhale for 8 seconds...";
-                playBeep();
-                vibrate();
-            }, 11000);
+      // 1초 간격으로 시간 업데이트
+      intervalId = setInterval(() => {
+        timeLeft--;
+        updateUI();
 
-            setTimeout(() => {
-                // Restart the cycle
-                status.textContent = "Cycle complete. Restarting...";
-                setTimeout(() => startBreathing(), 8000); // Loop the breathing
-            }, 19000);
+        if (timeLeft <= 0) {
+          nextPhase();
         }
-    </script>
+      }, 1000);
+    }
+
+    function nextPhase() {
+      currentPhaseIndex++;
+
+      // 모든 단계가 끝나면(4-7-8 모두 완료) 다시 처음부터 시작
+      if (currentPhaseIndex >= phases.length) {
+        currentPhaseIndex = 0;
+      }
+
+      timeLeft = phases[currentPhaseIndex].duration;
+      beep();
+      vibrate();
+    }
+
+    // UI 업데이트
+    function updateUI() {
+      const phaseInfo = phases[currentPhaseIndex];
+      document.getElementById("phase").textContent = phaseInfo.name;
+      document.getElementById("countdown").textContent = timeLeft;
+      document.getElementById("hint").textContent = phaseInfo.hint;
+    }
+
+    // 소리 재생
+    function beep() {
+      const audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+      audio.play();
+    }
+
+    // 진동(모바일 지원 시)
+    function vibrate() {
+      if (navigator.vibrate) {
+        navigator.vibrate(300); // 300ms 진동
+      }
+    }
+  </script>
 </body>
 </html>
